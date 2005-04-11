@@ -2,15 +2,15 @@ package Template::Multilingual::Parser;
 
 use strict;
 use base qw(Template::Parser);
-use constant LANG_RE => qr{<([a-z]{2})>(.*?)</\1>}s;
+use constant LANG_RE => qr{<(\w+)>(.*?)</\1>}s;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new
 {
     my ($class, $options) = @_;
     my $self = $class->SUPER::new($options);
-    $self->{gsections} = [];
+    $self->{_sections} = [];
     return $self;
 }
 
@@ -23,7 +23,7 @@ sub parse
 
     # replace multilingual sections with TT directives
     $text = '';
-    for my $section (@{$self->{sections}}) {
+    for my $section (@{$self->{_sections}}) {
         my $translated = $section->{text};
         if ($section->{lang}) {
             $translated =~ s/@{[LANG_RE]}/\[% CASE '$1' %\]$2/gs;
@@ -39,10 +39,9 @@ sub parse
 sub _tokenize
 {
     my ($self, $text) = @_;
-    return unless defined $text && length $text;
 
     # extract all sections from the text
-    $self->{sections} = [];
+    $self->{_sections} = [];
     while ($text =~ s!
            ^(.*?)             # $1 - start of line up to start tag
             (?:
@@ -53,17 +52,13 @@ sub _tokenize
             !!sx
           )
     {
-        push @{$self->{sections}}, { text => $1 } if $1;
-        push @{$self->{sections}}, { lang => 1, text => $2 }
-            if defined $2;
+        push @{$self->{_sections}}, { text => $1 } if $1;
+        push @{$self->{_sections}}, { lang => 1, text => $2 }
+            if $2;
     }
-    push @{$self->{sections}}, { text => $text } if $text;
-
-    $self->{gsections} = [ @{$self->{sections}} ]
-        unless @{$self->{gsections}};
+    push @{$self->{_sections}}, { text => $text } if $text;
 }
-sub get_sections   { shift->{gsections} }
-sub reset_sections { shift->{gsections} = [] }
+sub sections { $_[0]->{_sections} }
 
 1;
 
@@ -71,10 +66,26 @@ __END__
 
 =head1 NAME
 
-Template::Multilingual::Parser - parse multilingual text in templates
+Template::Multilingual::Parser - Multilingual template parser
 
 =head1 DESCRIPTION
 
-This module is used internally by Template::Multilingual
+A subclass of L<Template::Parser> that parses multilingual text
+sections. This module is used internally by L<Template::Multilingual>.
+
+=head1 METHODS
+
+=head2 new(\%params)
+
+The new() constructor creates and returns a reference to a new
+parser object. A reference to a hash may be supplied as a
+parameter to provide configuration values to the 
+L<Template::Parser> superclass.
+
+=head2 parse($text)
+
+The parse() method parses multilingual sections from the input
+text and translates them to Template Toolkit directives. The
+result is then passed to the L<Template::Parser> superclass.
 
 =cut

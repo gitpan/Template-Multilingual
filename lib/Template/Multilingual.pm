@@ -4,13 +4,13 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub _init
 {
     my ($self, $options) = @_;
 
-    $options->{PARSER} ||= Template::Multilingual::Parser->new($options);
+    $options->{PARSER} = Template::Multilingual::Parser->new($options);
     $self->{PARSER} = $options->{PARSER};
     $self->SUPER::_init($options)
 }
@@ -25,13 +25,12 @@ sub process
     my ($self, $filename, $vars, @args) = @_;
     $vars ||= {};
     $vars->{language} = $self->{language};
-	$self->{PARSER}->reset_sections;
     $self->SUPER::process($filename, $vars, @args);
 }
 
 =head1 NAME
 
-Template::Multilingual - Multilingal templates for Template Toolkit
+Template::Multilingual - Multilingual templates for Template Toolkit
 
 =head1 SYNOPSIS
 
@@ -55,8 +54,9 @@ Then specify the language to use when processing a template:
 
 =head2 language($lcode)
 
-Specify the language to be used when processing the template. Use 2-letter language codes
-as specified by ISO 639-1.
+Specify the language to be used when processing the template. Any string that
+matches C<\w+> is fine, but we suggest sticking to ISO-639 which provides
+2-letter codes for common languages and 3-letter codes for many others.
 
 =head1 AUTHOR
 
@@ -64,24 +64,25 @@ Eric Cholet, C<< <cholet@logilune.com> >>
 
 =head1 BUGS
 
-Multilingual text sections cannot be used inside a TT directive, in other
-words the following is illegal and will trigger a TT syntax error:
+Multilingual text sections cannot be used inside TT directives.
+The following is illegal and will trigger a TT syntax error:
 
-    [% title = "<t><fr>Aujourd'hui</fr><en>Today</en></t>" %]
+    [% title = "<t><fr>Bonjour</fr><en>Hello</en></t>" %]
 
 Use this instead:
 
-    [% SWITCH language;
-       CASE 'en'; title = "Today";
-       CASE 'fr'; title = "Aujourd'hui";
-       END
-    %]
+    [% title = BLOCK %]<t><fr>Bonjour</fr><en>Hello</en></t>[% END %]
 
 Please report any bugs or feature requests to
 C<bug-template-multilingual@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Template-Multilingual>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
+
+=head1 SEE ALSO
+
+ISO 639-2 Codes for the Representation of Names of Languages:
+http://www.loc.gov/standards/iso639-2/langcodes.html
 
 =head1 COPYRIGHT & LICENSE
 

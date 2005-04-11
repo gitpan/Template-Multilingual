@@ -3,9 +3,17 @@
 use strict;
 
 my @templates = (
+    { in  => '',
+      out => '',
+      sections => [ ],
+    },
     { in  => 'foo',
       out => 'foo',
       sections => [ { text => 'foo' } ],
+    },
+    { in  => '<t></t>',
+      out => '',
+      sections => [ ],
     },
     {
       in  => '<t><fr>foo</fr></t>',
@@ -35,10 +43,10 @@ my @templates = (
       sections => [ { text => '<en>foo</en>', lang => 1 } ],
     },
     {
-      lang => 'en',
-      in  => "<t><fr>foo</fr>\n<en>bar</en></t>",
+      lang => 'eng',
+      in  => "<t><fra>foo</fra>\n<eng>bar</eng></t>",
       out => 'bar',
-      sections => [ { text => "<fr>foo</fr>\n<en>bar</en>", lang => 1 } ],
+      sections => [ { text => "<fra>foo</fra>\n<eng>bar</eng>", lang => 1 } ],
     },
     {
       in => "[% SWITCH language; CASE 'en'; 'foo'; CASE 'fr'; 'bar'; END %]",
@@ -70,7 +78,7 @@ for my $t (@templates) {
     my $output;
     ok($template->process(\$t->{in}, {}, \$output), 'process');
     is($output, $t->{out}, 'output');
-    is_deeply($template->{PARSER}->get_sections, $t->{sections}, 'sections');
+    is_deeply($template->{PARSER}->sections, $t->{sections}, 'sections');
 }
 
 __END__
