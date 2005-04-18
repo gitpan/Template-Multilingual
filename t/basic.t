@@ -48,11 +48,6 @@ my @templates = (
       out => 'bar',
       sections => [ { text => "<fra>foo</fra>\n<eng>bar</eng>", lang => 1 } ],
     },
-    {
-      in => "[% SWITCH language; CASE 'en'; 'foo'; CASE 'fr'; 'bar'; END %]",
-      out =>'bar',
-      sections => [ { text => "[% SWITCH language; CASE 'en'; 'foo'; CASE 'fr'; 'bar'; END %]" } ],
-    },
     { # sections
       in  => "A<t><fr>foo</fr></t>B<t><en>bar</en></t>C",
       out => 'AfooBC',
@@ -65,7 +60,7 @@ my @templates = (
     },
 );
 use Test::More;
-plan tests => 2 + 4 * @templates;
+plan tests => 3 + 7 * @templates;
 
 require_ok('Template::Multilingual');
 my $template = Template::Multilingual->new;
@@ -77,6 +72,17 @@ for my $t (@templates) {
     is($template->language, $lang, "get/set language");
     my $output;
     ok($template->process(\$t->{in}, {}, \$output), 'process');
+    is($output, $t->{out}, 'output');
+    is_deeply($template->{PARSER}->sections, $t->{sections}, 'sections');
+}
+
+$template = Template::Multilingual->new(LANGUAGE_VAR => 'global.language');
+ok($template);
+
+for my $t (@templates) {
+    my $lang = $t->{lang} || 'fr';
+    my $output;
+    ok($template->process(\$t->{in}, { global => { language => $lang }}, \$output), 'process');
     is($output, $t->{out}, 'output');
     is_deeply($template->{PARSER}->sections, $t->{sections}, 'sections');
 }

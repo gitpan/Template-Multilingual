@@ -4,12 +4,14 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub _init
 {
     my ($self, $options) = @_;
 
+    $self->{LANGUAGE_VAR} = $options->{LANGUAGE_VAR};
+    $options->{LANGUAGE_VAR} ||= 'language';
     $options->{PARSER} = Template::Multilingual::Parser->new($options);
     $self->{PARSER} = $options->{PARSER};
     $self->SUPER::_init($options)
@@ -23,8 +25,10 @@ sub language
 sub process
 {
     my ($self, $filename, $vars, @args) = @_;
-    $vars ||= {};
-    $vars->{language} = $self->{language};
+    unless ($self->{LANGUAGE_VAR}) {
+        $vars ||= {};
+        $vars->{language} = $self->{language}
+    }
     $self->SUPER::process($filename, $vars, @args);
 }
 
@@ -50,7 +54,41 @@ Then specify the language to use when processing a template:
     $template->language('en');
     $template->process('example.ttml');
 
+You can also provide the name of the template variable that will
+hold the language:
+
+    my $template = Template::Multilingual->new(LANGUAGE_VAR => 'foo');
+    $template->process('example.ttml', { foo => 'en' });
+
 =head1 METHODS
+
+=head2 new(\%params)
+
+The new() constructor creates and returns a reference to a new
+template object. A reference to a hash may be supplied as a
+parameter to provide configuration values.
+
+Configuration values are all valid L<Template> superclass options,
+and one specific to this class:
+
+=over
+
+=item LANGUAGE_VAR
+
+The LANGUAGE_VAR option can be used to set the name of the template
+variable which contains the current language.
+
+  my $parser = Template::Multilingual::Parser->new({
+     LANGUAGE_VAR => 'global.language',
+  });
+
+If this option is set, you code is responsible for setting the
+variable's value to the current language when processing the
+template. Calling C<language()> will have no effect.
+
+If this option is not set, it defaults to I<language>.
+
+=back
 
 =head2 language($lcode)
 

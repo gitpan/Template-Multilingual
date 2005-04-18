@@ -1,5 +1,8 @@
 Revision history for Template-Multilingual
 
+0.03    
+        LANGUAGE_VAR option selects name of language template variable
+
 0.02    2005-04-12
         Language codes are now matched by <\w+> (previously <[a-z]{2}>)
         Improve test coverage

@@ -4,13 +4,14 @@ use strict;
 use base qw(Template::Parser);
 use constant LANG_RE => qr{<(\w+)>(.*?)</\1>}s;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new
 {
     my ($class, $options) = @_;
     my $self = $class->SUPER::new($options);
     $self->{_sections} = [];
+    $self->{_langvar} = $options->{LANGUAGE_VAR} || 'language';
     return $self;
 }
 
@@ -27,7 +28,7 @@ sub parse
         my $translated = $section->{text};
         if ($section->{lang}) {
             $translated =~ s/@{[LANG_RE]}/\[% CASE '$1' %\]$2/gs;
-            $text .= '[% SWITCH language %]'.$translated.'[% END %]';
+            $text .= "[% SWITCH $self->{_langvar} %]".$translated.'[% END %]';
         }
         else {
             $text .= $translated;
@@ -64,6 +65,15 @@ sub sections { $_[0]->{_sections} }
 
 __END__
 
+=head1 SYNOPSIS
+
+    use Template;
+    use Template::Multilingual::Parser;
+  
+    my $parser = Template::Multilingual::Parser->new();
+    my $template = Template->new(PARSER => $parser);
+    $template->process('example.ttml', { language => 'en'});
+
 =head1 NAME
 
 Template::Multilingual::Parser - Multilingual template parser
@@ -79,8 +89,24 @@ sections. This module is used internally by L<Template::Multilingual>.
 
 The new() constructor creates and returns a reference to a new
 parser object. A reference to a hash may be supplied as a
-parameter to provide configuration values to the 
-L<Template::Parser> superclass.
+parameter to provide configuration values.
+
+Configuration values are all valid L<Template::Parser> superclass
+options, and one specific to this class:
+
+=over
+
+=item LANGUAGE_VAR
+
+The LANGUAGE_VAR option can be used to set the name of the template
+variable which contains the current language. Defaults to
+I<language>.
+
+  my $parser = Template::Multilingual::Parser->new({
+     LANGUAGE_VAR => 'global.language',
+  });
+
+=back
 
 =head2 parse($text)
 
