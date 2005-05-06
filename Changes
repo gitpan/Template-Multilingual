@@ -1,9 +1,12 @@
 Revision history for Template-Multilingual
 
-0.03    
+0.04    2005-05-06
+        add GPG signature using Module::Signature
+
+0.03    2005-05-18
         LANGUAGE_VAR option selects name of language template variable
 
-0.02    2005-04-12
+0.02    2005-04-11
         Language codes are now matched by <\w+> (previously <[a-z]{2}>)
         Improve test coverage
         Fix/improve pod

@@ -4,7 +4,7 @@ use strict;
 use base qw(Template::Parser);
 use constant LANG_RE => qr{<(\w+)>(.*?)</\1>}s;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new
 {
