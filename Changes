@@ -1,5 +1,11 @@
 Revision history for Template-Multilingual
 
+0.05    2005-06-17
+        more robust parsing; text within <t>...</t> but outside
+          any <lang>..</lang> is now ignored
+        add Test::Pod and Test::Pod::Coverage tests
+        improve Template::Multilingual::Parser documentation
+        
 0.04    2005-05-06
         add GPG signature using Module::Signature
 

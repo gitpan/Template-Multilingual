@@ -15,19 +15,21 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 13ee0423140a5c3afc61ea6cd41af158bc13c473 Build.PL
-SHA1 a18bc11699a9ad6faa6c4c5c2022532807611974 Changes
-SHA1 2f00edda097697504e670fb1e8d471962a06b5e8 MANIFEST
-SHA1 fe6563e3f88f3fadc0bb3c210f39c6d6e2f705da META.yml
+SHA1 1f0df0f09cabaeeabd7c160f1ca29df9a5da3eea Changes
+SHA1 e8f22a04ffe41e8cb86ed9e44c94b7dd6d3fd35e MANIFEST
+SHA1 71ada5c28a49d4c7013d6066a4ae04474223363c META.yml
 SHA1 0a9195795af9b6917300e660aaccfb139d2b2a79 Makefile.PL
 SHA1 141c6a1befd18d4f5dbbb24696a231153d09efc6 README
-SHA1 e9034d52e231c80d2c8e388c104c49ad68e9f879 lib/Template/Multilingual.pm
-SHA1 1c5d00e9c26f5798eebf666017984277df1b5ca2 lib/Template/Multilingual/Parser.pm
+SHA1 9ed58fc4d1df0575ef5223b5ed8d40cad71cb692 lib/Template/Multilingual.pm
+SHA1 0083b15aae71c9026952340aeeab6e378765ad66 lib/Template/Multilingual/Parser.pm
 SHA1 7538b82ddcfa40917b509e02f244a04ac86f6a84 t/00-load.t
-SHA1 e9050f995b7bea3d7c16cf5ea2a97eeab029e38e t/basic.t
+SHA1 6457ef7762f7a59f229d7a68494f2d2fe3c862bc t/basic.t
+SHA1 0190346d7072d458c8a10a45c19f86db641dcc48 t/pod.t
+SHA1 6da39b48ce64b584e4c3274bff96fc76ff484820 t/podcover.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.4 (Darwin)
 
-iD8DBQFCe6DwVZHiwGZkwHgRAvpHAKCbDB7o4HHxx7BXbOpO2gMt2mR6MACg2S+Z
-lWkVLWJZvO4VdOGwIgnYWQo=
-=cW9a
+iD8DBQFCsh+1VZHiwGZkwHgRAoMjAJoDN4ByllkIWsBAHoU0tQU5I8mARACgyCaF
+JHhr4ogaiVkH3xYn4uyHLys=
+=isOu
 -----END PGP SIGNATURE-----

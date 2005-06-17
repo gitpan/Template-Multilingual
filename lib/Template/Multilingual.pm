@@ -4,7 +4,7 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub _init
 {
@@ -38,15 +38,15 @@ Template::Multilingual - Multilingual templates for Template Toolkit
 
 =head1 SYNOPSIS
 
-This subclass of Template Toolkit supports multilingual templates: templates that
-contain text in several languages.
+This subclass of Template Toolkit's C<Template> class supports multilingual
+templates: templates that contain text in several languages.
 
     <t>
       <en>Hello!</en>
       <fr>Bonjour !</fr>
     </t>
 
-Then specify the language to use when processing a template:
+Specify the language to use when processing a template:
 
     use Template::Multilingual;
 
@@ -68,7 +68,7 @@ The new() constructor creates and returns a reference to a new
 template object. A reference to a hash may be supplied as a
 parameter to provide configuration values.
 
-Configuration values are all valid L<Template> superclass options,
+Configuration values are all valid C<Template> superclass options,
 and one specific to this class:
 
 =over
@@ -96,6 +96,11 @@ Specify the language to be used when processing the template. Any string that
 matches C<\w+> is fine, but we suggest sticking to ISO-639 which provides
 2-letter codes for common languages and 3-letter codes for many others.
 
+=head2 process
+
+Used exactly as the original Template Toolkit C<process> method.
+Be sure to call C<language> before calling C<process>.
+
 =head1 AUTHOR
 
 Eric Cholet, C<< <cholet@logilune.com> >>
@@ -118,6 +123,9 @@ I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
 =head1 SEE ALSO
+
+If you are already using your own C<Template> subclass, you may find it
+easier to use L<Template::Multilingual::Parser> instead.
 
 ISO 639-2 Codes for the Representation of Names of Languages:
 http://www.loc.gov/standards/iso639-2/langcodes.html
