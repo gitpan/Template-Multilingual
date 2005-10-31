@@ -3,6 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
+    (MM->can('signature_target') ? (SIGN => 1) : ()),
     NAME                => 'Template::Multilingual',
     AUTHOR              => 'Eric Cholet <cholet@logilune.com>',
     VERSION_FROM        => 'lib/Template/Multilingual.pm',

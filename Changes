@@ -1,5 +1,11 @@
 Revision history for Template-Multilingual
 
+0.06    2005-10-31
+        add support for TAG_STYLE, START_TAG and END_TAG template options,
+          thanks to Birgit Kellner for pointing this out.
+        Template::Multilingual::Parser::sections() is now correctly
+          documented
+
 0.05    2005-06-17
         more robust parsing; text within <t>...</t> but outside
           any <lang>..</lang> is now ignored

@@ -4,7 +4,7 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub _init
 {
@@ -115,6 +115,10 @@ The following is illegal and will trigger a TT syntax error:
 Use this instead:
 
     [% title = BLOCK %]<t><fr>Bonjour</fr><en>Hello</en></t>[% END %]
+
+
+The TAG_STYLE, START_TAG and END_TAG directives are supported, but the
+TAGS directive is not.
 
 Please report any bugs or feature requests to
 C<bug-template-multilingual@rt.cpan.org>, or through the web interface at

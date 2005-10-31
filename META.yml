@@ -1,6 +1,6 @@
 ---
 name: Template-Multilingual
-version: 0.05
+version: 0.06
 author:
   - Eric Cholet <cholet@logilune.com>
 abstract: Multilingual templates for Template Toolkit
@@ -11,8 +11,8 @@ requires:
 provides:
   Template::Multilingual:
     file: lib/Template/Multilingual.pm
-    version: 0.05
+    version: 0.06
   Template::Multilingual::Parser:
     file: lib/Template/Multilingual/Parser.pm
-    version: 0.05
+    version: 0.06
 generated_by: Module::Build version 0.2609

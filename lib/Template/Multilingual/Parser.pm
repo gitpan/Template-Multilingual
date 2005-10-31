@@ -3,7 +3,7 @@ package Template::Multilingual::Parser;
 use strict;
 use base qw(Template::Parser);
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub new
 {
@@ -11,6 +11,13 @@ sub new
     my $self = $class->SUPER::new($options);
     $self->{_sections} = [];
     $self->{_langvar} = $options->{LANGUAGE_VAR} || 'language';
+
+    my $style = $self->{ STYLE }->[-1];
+    @$self{ qw(_start _end) } = @$style{ qw( START_TAG END_TAG  ) };
+    for (qw( _start _end )) {
+        $self->{$_} =~ s/\\([^\\])/$1/g;
+    }
+
     return $self;
 }
 
@@ -28,11 +35,11 @@ sub parse
             $text .= $section->{nolang};
         }
         elsif (my $t = $section->{lang}) {
-            $text .= "[% SWITCH $self->{_langvar} %]";
+            $text .= "$self->{_start} SWITCH $self->{_langvar} $self->{_end}";
             for my $lang (keys %$t) {
-                $text .= "[% CASE '$lang' %]" . $t->{$lang};
+                $text .= "$self->{_start} CASE '$lang' $self->{_end}" . $t->{$lang};
             }
-            $text .= '[% END %]';
+            $text .= "$self->{_start} END $self->{_end}";
         }
     }
     return $self->SUPER::parse ($text);
@@ -134,8 +141,23 @@ directives. The result is then passed to the C<Template::Parser> superclass.
 =head2 sections
 
 Returns a reference to an array of tokenized sections. Each section is a
-reference to hash with a C<text> key and an optional C<lang> key.
-XXX to be continued
+reference to hash with either a C<nolang> key or a C<lang> key.
+
+A C<nolang> key denotes text outside of any multilingual sections. The value
+is the text itself.
+
+A C<lang> key denotes text inside a multilingual section. The value is a
+reference to a hash, whose keys are language codes and values the corresponding
+text. For example, the following multilingual template:
+
+  foo <t><fr>bonjour</fr><en>Hello</en></t> bar
+
+will parse to the following sections:
+
+  [ { nolang => 'foo ' },
+    {   lang => { fr => 'bonjour', en => 'hello' } },
+    { nolang => ' bar' },
+  ]
 
 =head1 BUGS
 
@@ -147,6 +169,10 @@ The following is illegal and will trigger a TT syntax error:
 Use this instead:
 
     [% title = BLOCK %]<t><fr>Bonjour</fr><en>Hello</en></t>[% END %]
+
+
+The TAG_STYLE, START_TAG and END_TAG directives are supported, but the
+TAGS directive is not.
 
 Please report any bugs or feature requests to
 C<bug-template-multilingual@rt.cpan.org>, or through the web interface at
