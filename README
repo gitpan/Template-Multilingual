@@ -48,7 +48,7 @@ Alternatively, to install with Module::Build, you can use the following commands
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2005 Eric Cholet
+Copyright (C) 2005, 2006 Eric Cholet
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

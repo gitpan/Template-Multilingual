@@ -3,7 +3,7 @@ package Template::Multilingual::Parser;
 use strict;
 use base qw(Template::Parser);
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub new
 {

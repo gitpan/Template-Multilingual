@@ -4,7 +4,7 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub _init
 {

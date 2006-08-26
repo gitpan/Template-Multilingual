@@ -1,5 +1,8 @@
 Revision history for Template-Multilingual
 
+0.07    2006-08-26
+        remove Module::Signature support, does more harm than good
+
 0.06    2005-10-31
         add support for TAG_STYLE, START_TAG and END_TAG template options,
           thanks to Birgit Kellner for pointing this out.

@@ -12,7 +12,6 @@ my $builder = Module::Build->new(
         'Template'   => 2,
     },
     add_to_cleanup      => [ 'Template-Multilingual-*' ],
-    sign                => 1,
 );
 
 $builder->create_build_script();
