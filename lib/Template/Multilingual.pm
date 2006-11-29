@@ -4,7 +4,7 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 sub _init
 {
@@ -78,7 +78,7 @@ and one specific to this class:
 The LANGUAGE_VAR option can be used to set the name of the template
 variable which contains the current language.
 
-  my $parser = Template::Multilingual::Parser->new({
+  my $parser = Template::Multilingual->new({
      LANGUAGE_VAR => 'global.language',
   });
 
@@ -136,7 +136,7 @@ http://www.loc.gov/standards/iso639-2/langcodes.html
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005 Eric Cholet, All Rights Reserved.
+Copyright 2005, 2006 Eric Cholet, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

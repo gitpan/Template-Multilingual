@@ -3,7 +3,7 @@ package Template::Multilingual::Parser;
 use strict;
 use base qw(Template::Parser);
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 sub new
 {
@@ -189,7 +189,7 @@ http://www.loc.gov/standards/iso639-2/langcodes.html
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005 Eric Cholet, All Rights Reserved.
+Copyright 2005, 2006 Eric Cholet, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

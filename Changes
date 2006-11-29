@@ -1,5 +1,8 @@
 Revision history for Template-Multilingual
 
+0.08    2006-11-29
+        fix incorrect doc
+
 0.07    2006-08-26
         remove Module::Signature support, does more harm than good
 
