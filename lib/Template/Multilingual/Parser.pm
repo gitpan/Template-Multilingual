@@ -3,7 +3,7 @@ package Template::Multilingual::Parser;
 use strict;
 use base qw(Template::Parser);
 
-our $VERSION = '0.09';
+our $VERSION = '1.00';
 
 sub new
 {
@@ -29,17 +29,45 @@ sub parse
     $self->_tokenize($text);
 
     # replace multilingual sections with TT directives
-    $text = '';
+    my ($S, $E, $LANGVAR) = map $self->{$_}, qw(_start _end _langvar);
+
+    # if language is a variant (en_US), create a template variable holding the fallback value (en)
+    $text = "$S IF (tm_matches = $LANGVAR.match('^(\\w+)[-_].*\$')); tm_fb = tm_matches.0; END $E";
+
     for my $section (@{$self->{_sections}}) {
         if ($section->{nolang}) {
             $text .= $section->{nolang};
         }
         elsif (my $t = $section->{lang}) {
-            $text .= "$self->{_start} SWITCH $self->{_langvar} $self->{_end}";
-            for my $lang (keys %$t) {
-                $text .= "$self->{_start} CASE '$lang' $self->{_end}" . $t->{$lang};
+            my @languages = keys %$t;
+
+            # first loop through languages: look for exact match
+            $text .= "$S tm_f = 0; SWITCH $LANGVAR $E";
+            for my $lang (@languages) {
+                $text .= "$S CASE '$lang' $E" . $t->{$lang};
             }
-            $text .= "$self->{_start} END $self->{_end}";
+            # add a default case to trigger fallback
+            $text .= "$S CASE; tm_f=1; END; $E";
+
+            # second loop: fallback to primary language (en_US matches en)
+            $text .= "$S IF tm_fb AND tm_f; tm_f=0; SWITCH tm_fb; $E";
+            for my $lang (@languages) {
+                $text .= "$S CASE '$lang' $E" . $t->{$lang};
+            }
+            # add a default case to trigger last resort fallback
+            #   LANG is fr_XX or fr but template has neither
+            #   we try to fallback to fr_YY is present
+            my %seen;
+            my @fallbacks = map { /^(\w+)[-_].*$/ && !$seen{$_}++ ? [ $1 => $_] : () } sort @languages;
+            if (@fallbacks) {
+                # third loop: fallback to first available variant
+                $text .= "$S CASE; tm_f=1; END; END; IF tm_f; SWITCH tm_fb || $LANGVAR; $E";
+                for my $ref (@fallbacks) {
+                    my ($lang, $variant) = @$ref;
+                    $text .= "$S CASE '$lang' $E" . $t->{$variant};
+                }
+            }
+            $text .= "$S END; END $E";
         }
     }
     return $self->SUPER::parse ($text);
@@ -56,7 +84,7 @@ sub _tokenize
     for my $t (@tokens) {
         if ($i) {             # <t>...</t> multilingual section
             my %section;
-            while ($t =~ m!<(\w+)>(.*?)</\1>!gs) {
+            while ($t =~ m!<([^<>]+)>(.*?)</\1>!gs) {
                 $section{$1} = $2;
             }
             push @{$self->{_sections}}, { lang => \%section }
@@ -78,7 +106,7 @@ Template::Multilingual::Parser - Multilingual template parser
 
     use Template;
     use Template::Multilingual::Parser;
-  
+    
     my $parser = Template::Multilingual::Parser->new();
     my $template = Template->new(PARSER => $parser);
     $template->process('example.ttml', { language => 'en'});
@@ -159,6 +187,42 @@ will parse to the following sections:
     { nolang => ' bar' },
   ]
 
+=head1 LANGUAGE SUBTAG HANDLING
+
+This module supports language subtags to express variants, e.g. "en_US" or "en-US".
+Here are the rules used for language matching:
+
+=over
+
+=item *
+
+Exact match: the current language is found in the template
+
+  language    template                              output
+  fr          <fr>foo</fr><fr_CA>bar</fr_CA>        foo
+  fr_CA       <fr>foo</fr><fr_CA>bar</fr_CA>        bar
+
+=item *
+
+Fallback to the primary language
+
+  language    template                              output
+  fr_CA       <fr>foo</fr><fr_BE>bar</fr_BE>        foo
+
+=item *
+
+Fallback to first (in alphabetical order) other variant of the primary language
+
+  language    template                              output
+  fr          <fr_FR>foo</fr_FR><fr_BE>bar</fr_BE>  bar
+  fr_CA       <fr_FR>foo</fr_FR><fr_BE>bar</fr_BE>  bar
+
+=back
+
+=head1 AUTHOR
+
+Eric Cholet, C<< <cholet@logilune.com> >>
+
 =head1 BUGS
 
 Multilingual text sections cannot be used inside TT directives.
@@ -189,7 +253,7 @@ http://www.loc.gov/standards/iso639-2/langcodes.html
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005, 2006 Eric Cholet, All Rights Reserved.
+Copyright 2009 Eric Cholet, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

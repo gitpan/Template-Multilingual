@@ -1,5 +1,9 @@
 Revision history for Template-Multilingual
 
+1.00    2009-01-18
+        add support for language subtags, e.g. en_US or en-US
+        Language codes are now matched by [^<>]+ (previously \w+)
+
 0.09    2006-07-30
         remove Test::Pod and Test::Pod::Coverage tests
 

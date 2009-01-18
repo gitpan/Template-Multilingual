@@ -4,7 +4,7 @@ use strict;
 use base qw(Template);
 use Template::Multilingual::Parser;
 
-our $VERSION = '0.09';
+our $VERSION = '1.00';
 
 sub _init
 {
@@ -82,7 +82,7 @@ variable which contains the current language.
      LANGUAGE_VAR => 'global.language',
   });
 
-If this option is set, you code is responsible for setting the
+If this option is set, your code is responsible for setting the
 variable's value to the current language when processing the
 template. Calling C<language()> will have no effect.
 
@@ -100,6 +100,38 @@ matches C<\w+> is fine, but we suggest sticking to ISO-639 which provides
 
 Used exactly as the original Template Toolkit C<process> method.
 Be sure to call C<language> before calling C<process>.
+
+=head1 LANGUAGE SUBTAG HANDLING
+
+This module supports language subtags to express variants, e.g. "en_US" or "en-US".
+Here are the rules used for language matching:
+
+=over
+
+=item *
+
+Exact match: the current language is found in the template
+
+  language    template                              output
+  fr          <fr>foo</fr><fr_CA>bar</fr_CA>        foo
+  fr_CA       <fr>foo</fr><fr_CA>bar</fr_CA>        bar
+
+=item *
+
+Fallback to the primary language
+
+  language    template                              output
+  fr_CA       <fr>foo</fr><fr_BE>bar</fr_BE>        foo
+
+=item *
+
+Fallback to first (in alphabetical order) other variant of the primary language
+
+  language    template                              output
+  fr          <fr_FR>foo</fr_FR><fr_BE>bar</fr_BE>  bar
+  fr_CA       <fr_FR>foo</fr_FR><fr_BE>bar</fr_BE>  bar
+
+=back
 
 =head1 AUTHOR
 
@@ -136,7 +168,7 @@ http://www.loc.gov/standards/iso639-2/langcodes.html
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005, 2006 Eric Cholet, All Rights Reserved.
+Copyright 2009 Eric Cholet, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

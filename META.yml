@@ -1,6 +1,6 @@
 ---
 name: Template-Multilingual
-version: 0.09
+version: 1.00
 author:
   - 'Eric Cholet <cholet@logilune.com>'
 abstract: Multilingual templates for Template Toolkit
@@ -13,11 +13,11 @@ requires:
 provides:
   Template::Multilingual:
     file: lib/Template/Multilingual.pm
-    version: 0.09
+    version: 1.00
   Template::Multilingual::Parser:
     file: lib/Template/Multilingual/Parser.pm
-    version: 0.09
-generated_by: Module::Build version 0.2805
+    version: 1.00
+generated_by: Module::Build version 0.31012
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2
